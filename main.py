@@ -1,4 +1,4 @@
-from listas.lista_campos import ListaCampos
+from listas.listas_campos import ListaCampos
 from utils.lector_xml import cargar_xml
 
 # Creamos la lista global de campos

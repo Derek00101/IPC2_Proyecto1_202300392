@@ -1,4 +1,4 @@
-from listas.lista_frecuencias import ListaFrecuencias
+from listas.listas_frecuencias import ListaFrecuencias
 
 class SensorCultivo:
     def __init__(self, id_sensor, nombre):
@@ -8,3 +8,4 @@ class SensorCultivo:
     
     def __str__(self):
         return f"{self.id} - {self.nombre}"
+

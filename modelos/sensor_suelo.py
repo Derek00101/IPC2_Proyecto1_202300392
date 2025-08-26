@@ -1,4 +1,4 @@
-from listas.lista_frecuencias import ListaFrecuencias
+from listas.listas_frecuencias import ListaFrecuencias
 
 class SensorSuelo:
     def __init__(self, id_sensor, nombre):
