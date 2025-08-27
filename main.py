@@ -1,5 +1,8 @@
 from listas.listas_campos import ListaCampos
 from utils.lector_xml import cargar_xml
+from utils.procesador import agrupar_estaciones, construir_matriz_suelo, construir_matriz_cultivo, generar_patrones, mostrar_matriz
+from utils.escritor_xml import escritor_xml
+
 
 # Creamos la lista global de campos
 lista_campos = ListaCampos()
@@ -23,11 +26,43 @@ def main():
             cargar_xml(ruta, lista_campos)
         
         elif opcion == "2":
-            print("Procesar archivo (pendiente)")
+            if lista_campos.primero is None:
+                print("Debe cargar un archivo primero.")
+            else:
+                actual = lista_campos.primero
+                while actual:
+                    campo = actual.dato
+                    print(f"\nProcesando campo {campo.id} - {campo.nombre}")
+                    
+                    # Suelo
+                    est, sens, matriz = construir_matriz_suelo(campo)
+                    mostrar_matriz(est, sens, matriz, "Matriz F[n,s] (Suelo)")
+                    
+                    patrones = generar_patrones(matriz)
+                    print("\nPatrones Suelo:", patrones)
+                    
+                    est_reduc, matriz_reduc = agrupar_estaciones(est, patrones, matriz)
+                    mostrar_matriz(est_reduc, sens, matriz_reduc, "Matriz Fr[n,s] (Suelo Reducida)")
+                    
+                    # Cultivo
+                    est, sens, matriz = construir_matriz_cultivo(campo)
+                    mostrar_matriz(est, sens, matriz, "Matriz F[n,t] (Cultivo)")
+                    
+                    patrones = generar_patrones(matriz)
+                    print("\nPatrones Cultivo:", patrones)
+                    
+                    est_reduc, matriz_reduc = agrupar_estaciones(est, patrones, matriz)
+                    mostrar_matriz(est_reduc, sens, matriz_reduc, "Matriz Fr[n,t] (Cultivo Reducida)")
+                    
+                    actual = actual.siguiente
         
         elif opcion == "3":
-            print("Escribir archivo salida (pendiente)")
-        
+            if lista_campos.primero is None:
+                print("Debe cargar y procesar un archivo primero.")
+            else:
+                ruta = input("Ingrese la ruta y nombre del archivo de salida (ejemplo: salida.xml): ")
+                escritor_xml(ruta, lista_campos)
+
         elif opcion == "4":
             print("\n--- Datos del estudiante ---")
             print("Carné: 202300392")
