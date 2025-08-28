@@ -84,9 +84,9 @@ def main():
                 while actual:
                     print(f"- {actual.dato.id}: {actual.dato.nombre}")
                     actual = actual.siguiente
-                
+
                 campo_id = input("Ingrese el ID del campo a graficar: ")
-                
+
                 # Buscar campo
                 actual = lista_campos.primero
                 campo = None
@@ -95,21 +95,46 @@ def main():
                         campo = actual.dato
                         break
                     actual = actual.siguiente
-                
+
                 if not campo:
                     print("Campo no encontrado.")
                 else:
                     print("\nOpciones de gráfica:")
                     print("1. Matriz F[n,s] (Suelo)")
                     print("2. Matriz F[n,t] (Cultivo)")
+                    print("3. Matriz Fp[n,s] (Patrones Suelo)")
+                    print("4. Matriz Fp[n,t] (Patrones Cultivo)")
+                    print("5. Matriz Fr[n,s] (Reducida Suelo)")
+                    print("6. Matriz Fr[n,t] (Reducida Cultivo)")
                     opcion_grafica = input("Seleccione una opción: ")
-                    
+
                     if opcion_grafica == "1":
                         est, sens, matriz = construir_matriz_suelo(campo)
-                        graficar_matriz(est, sens, matriz, f"Matriz F[n,s] - {campo.nombre}", "suelo")
+                        graficar_matriz(est, sens, matriz, f"Matriz F[n,s] - {campo.nombre}", "suelo_F")
                     elif opcion_grafica == "2":
                         est, sens, matriz = construir_matriz_cultivo(campo)
-                        graficar_matriz(est, sens, matriz, f"Matriz F[n,t] - {campo.nombre}", "cultivo")
+                        graficar_matriz(est, sens, matriz, f"Matriz F[n,t] - {campo.nombre}", "cultivo_F")
+                    elif opcion_grafica == "3":
+                        est, sens, matriz = construir_matriz_suelo(campo)
+                        patrones = generar_patrones(matriz)
+                        # Convertimos patrones a matriz (0/1)
+                        matriz_patrones = [[val for val in patron] for patron in patrones]
+                        graficar_matriz(est, sens, matriz_patrones, f"Matriz Fp[n,s] - {campo.nombre}", "suelo_Fp")
+                    elif opcion_grafica == "4":
+                        est, sens, matriz = construir_matriz_cultivo(campo)
+                        patrones = generar_patrones(matriz)
+                        matriz_patrones = [[val for val in patron] for patron in patrones]
+                        graficar_matriz(est, sens, matriz_patrones, f"Matriz Fp[n,t] - {campo.nombre}", "cultivo_Fp")
+                    elif opcion_grafica == "5":
+                        est, sens, matriz = construir_matriz_suelo(campo)
+                        patrones = generar_patrones(matriz)
+                        est_reduc, matriz_reduc = agrupar_estaciones(est, patrones, matriz)
+                        graficar_matriz(est_reduc, sens, matriz_reduc, f"Matriz Fr[n,s] - {campo.nombre}", "suelo_Fr")
+                    elif opcion_grafica == "6":
+                        est, sens, matriz = construir_matriz_cultivo(campo)
+                        patrones = generar_patrones(matriz)
+                        est_reduc, matriz_reduc = agrupar_estaciones(est, patrones, matriz)
+                        graficar_matriz(est_reduc, sens, matriz_reduc, f"Matriz Fr[n,t] - {campo.nombre}", "cultivo_Fr")
                     else:
                         print("Opción inválida.")
         
