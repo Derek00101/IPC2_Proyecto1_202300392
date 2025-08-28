@@ -1,0 +1,9 @@
+import graphviz
+
+dot = graphviz.Digraph(comment="Prueba")
+dot.node("A", "Nodo A")
+dot.node("B", "Nodo B")
+dot.edge("A", "B", label="conecta")
+
+dot.render("prueba_grafica", format="png", cleanup=True)
+print("Gráfica generada: prueba_grafica.png")

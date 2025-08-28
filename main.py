@@ -2,6 +2,8 @@ from listas.listas_campos import ListaCampos
 from utils.lector_xml import cargar_xml
 from utils.procesador import agrupar_estaciones, construir_matriz_suelo, construir_matriz_cultivo, generar_patrones, mostrar_matriz
 from utils.escritor_xml import escritor_xml
+from utils.graficador import graficar_matriz
+
 
 
 # Creamos la lista global de campos
@@ -73,7 +75,43 @@ def main():
             print("Sección: E")
         
         elif opcion == "5":
-            print("Generar gráfica (pendiente)")
+            if lista_campos.primero is None:
+                print("Debe cargar y procesar un archivo primero.")
+            else:
+                # Mostrar campos disponibles
+                print("\nCampos disponibles:")
+                actual = lista_campos.primero
+                while actual:
+                    print(f"- {actual.dato.id}: {actual.dato.nombre}")
+                    actual = actual.siguiente
+                
+                campo_id = input("Ingrese el ID del campo a graficar: ")
+                
+                # Buscar campo
+                actual = lista_campos.primero
+                campo = None
+                while actual:
+                    if actual.dato.id == campo_id:
+                        campo = actual.dato
+                        break
+                    actual = actual.siguiente
+                
+                if not campo:
+                    print("Campo no encontrado.")
+                else:
+                    print("\nOpciones de gráfica:")
+                    print("1. Matriz F[n,s] (Suelo)")
+                    print("2. Matriz F[n,t] (Cultivo)")
+                    opcion_grafica = input("Seleccione una opción: ")
+                    
+                    if opcion_grafica == "1":
+                        est, sens, matriz = construir_matriz_suelo(campo)
+                        graficar_matriz(est, sens, matriz, f"Matriz F[n,s] - {campo.nombre}", "suelo")
+                    elif opcion_grafica == "2":
+                        est, sens, matriz = construir_matriz_cultivo(campo)
+                        graficar_matriz(est, sens, matriz, f"Matriz F[n,t] - {campo.nombre}", "cultivo")
+                    else:
+                        print("Opción inválida.")
         
         elif opcion == "6":
             print("Saliendo...")
